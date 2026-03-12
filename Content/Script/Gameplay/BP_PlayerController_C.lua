@@ -77,6 +77,9 @@ function M:UpDateUI(Time)
             ScreenUI.Countdown:SetText(tostring(Time))
         end
     end
+    if Time <= 0 then
+        self:CheckGameOver()
+    end
 end
 
 -- 执行更新PlayerScreenUI的PlayerName
@@ -128,6 +131,16 @@ function M:UpDateUI_PlayerHPBar(PlayerIndex,NewHPVal,MaxHP)
         end
     end
 end
+
+-- 进行游戏结束结算
+function M:CreateGameOverUI(WinnerName)
+    -- 创建结算UI
+    local widget_class = UE.UClass.Load('/Game/BluePrints/UMG/BP_WaitingUI.BP_WaitingUI_C')
+    local widget_root = NewObject(widget_class, self)
+    widget_root:AddToViewport()
+    widget_root.WinnerName:SetText(WinnerName)
+end
+
 -- function M:Initialize(Initializer)
 -- end
 

@@ -17,8 +17,25 @@ end
 function M:OnHPChanged(NewHP)
     print("PlayerIndex",self.PlayerState.P_Index,"NewHP:",NewHP)
     self:HPChange_Server(NewHP)  -- 血量变化，向服务器发送消息更新UI
+    if NewHP <= 0 then
+        self:PlayerDie_Server(self.PlayerState.P_Index)
+    end
 end
 
+function M:PlayerDie_Server_RPC(PlayerIndex)
+    local GM = UE.UGameplayStatics.GetGameMode(self)
+    local Winner = GM:CheckWinnerOnDie(PlayerIndex)
+    self:PlayerDie_Multicast(Winner)
+end
+
+function M:PlayerDie_Multicast_RPC(Winner)
+    print(Winner)
+    -- 在所有客户端执行结算逻辑
+    local widget_class = UE.UClass.Load('/Game/BluePrints/UMG/BP_WaitingUI.BP_WaitingUI_C')
+    local widget_root = NewObject(widget_class, self)
+    widget_root:AddToViewport()
+    widget_root.WinnerName:SetText(Winner)
+end
 function M:HPChange_Server_RPC(NewHP)
     self:UpdatePlayerBar(NewHP)  -- 服务器收到消息，向所有客户端广播
 end

@@ -20,7 +20,7 @@ function M:K2_PostLogin(PlayerController)
         if self.ArrPlayerState:Num() == 2 then
 
             local GS = UE.UGameplayStatics.GetGameState( self)
-            GS:StartCountDown(60)  -- 通知GameState可以开始进行计时
+            GS:StartCountDown(50)  -- 通知GameState可以开始进行计时
             
             local ScoreboxManager = UE.UGameplayStatics.GetActorOfClass(self, UE.UClass.Load('/Game/BluePrints/Scene/ScoreBoxManager.ScoreBoxManager_C'))
             ScoreboxManager:StartSpawnBox()  -- 通知ScoreBoxManager开始生成初始时的ScoreBox
@@ -47,11 +47,25 @@ function M:CallSetPlayerScore(PlayerIndex)
     PS:SetPlayerScore(PlayerIndex, PS.P_Score)
 end
 
-function M:GameStart_RPC()
-    print("111")
-    local PC = UE.UGameplayStatics.GetPlayerController(self, 0)
-    PC:SetInputMode_GameOnly()
+-- 游戏结束时的结算
+function M:CheckWinner()
+    if self.ArrPlayerState:Get(1).P_Score > self.ArrPlayerState:Get(2).P_Score then
+        return string.format("WINNER IS %s", self.ArrPlayerState:Get(1).P_Name)
+    elseif self.ArrPlayerState:Get(1).P_Score < self.ArrPlayerState:Get(2).P_Score then
+        return string.format("WINNER IS %s", self.ArrPlayerState:Get(2).P_Name)
+    elseif self.ArrPlayerState:Get(1).P_Score == self.ArrPlayerState:Get(2).P_Score then
+        return "NO WINNER"
+    end
 end
+
+function M:CheckWinnerOnDie(PlayerIndex)
+    if PlayerIndex == 1 then
+        return string.format("WINNER IS %s", self.ArrPlayerState:Get(2).P_Name)
+    else
+        return string.format("WINNER IS %s", self.ArrPlayerState:Get(1).P_Name)
+    end
+end
+
 -- function M:Initialize(Initializer)
 -- end
 
