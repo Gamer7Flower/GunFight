@@ -22,8 +22,14 @@ public:
 	virtual void NativeConstruct() override;
 	
 	UPROPERTY(meta =(BindWidget))
-	UEditableTextBox* TextBox_IpAddress;
+	UEditableTextBox* TextBox_IpAddress;  // IP
 
+	UPROPERTY(meta =(BindWidget))
+	UEditableTextBox* TextBox_PlayerName;  // 玩家名
+	
+	UPROPERTY(meta =(BindWidget))
+	UEditableTextBox* TextBox_GameTime;  // 游戏时长
+	
 	UPROPERTY(meta =(BindWidget))
 	UButton* Button_Host;
 	
@@ -37,5 +43,6 @@ public:
 	void HostButtonClicked();
 	UFUNCTION()
 	void JoinButtonClicked();
+
 	
 };

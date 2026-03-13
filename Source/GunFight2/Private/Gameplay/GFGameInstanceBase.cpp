@@ -3,3 +3,7 @@
 
 #include "Gameplay/GFGameInstanceBase.h"
 
+
+void UGFGameInstanceBase::CreateSystemTipUI(FString TipText)
+{
+}
